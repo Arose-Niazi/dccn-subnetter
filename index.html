@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPv4 Subnet Calculator — VLSM &amp; FLSM with Step-by-Step Solutions</title>
+    <meta name="description" content="Free online IPv4 subnet calculator with VLSM (Variable Length Subnet Masking) and FLSM (Fixed Length Subnet Masking). Step-by-step calculations, subnet maps, network/broadcast addresses, usable host ranges, and CIDR notation.">
+    <meta name="keywords" content="subnet calculator, VLSM, FLSM, IPv4, subnetting, CIDR, network address, broadcast address, subnet mask, variable length subnet masking, fixed length subnet masking, IP calculator, network calculator">
+    <meta name="author" content="Arose Niazi">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://nc.arose-niazi.me/subnetter/">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="IPv4 Subnet Calculator — VLSM &amp; FLSM Step-by-Step">
+    <meta property="og:description" content="Free online IPv4 subnet calculator with VLSM and FLSM. Visualize subnet allocation, step-by-step calculations, and shareable results.">
+    <meta property="og:url" content="https://nc.arose-niazi.me/subnetter/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="NC Subnet Calculator">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="IPv4 Subnet Calculator — VLSM &amp; FLSM Step-by-Step">
+    <meta name="twitter:description" content="Free online IPv4 subnet calculator with VLSM and FLSM. Visual subnet maps and step-by-step solutions.">
+
+    <!-- OG Image -->
+    <meta property="og:image" content="https://nc.arose-niazi.me/subnetter/favicon.svg">
+    <meta name="twitter:image" content="https://nc.arose-niazi.me/subnetter/favicon.svg">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Subnetter">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "IPv4 Subnet Calculator",
+        "url": "https://nc.arose-niazi.me/subnetter/",
+        "description": "Free online IPv4 subnet calculator with VLSM and FLSM support. Step-by-step calculations, visual subnet maps, network and broadcast addresses, usable host ranges.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Person", "name": "Arose Niazi", "url": "https://arose-niazi.me" },
+        "educationalLevel": "University",
+        "about": {
+            "@type": "Thing",
+            "name": "IP Subnetting",
+            "description": "Dividing an IP network into smaller sub-networks using VLSM or FLSM techniques"
+        }
+    }
+    </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css?v=1">
+    <!-- App -->
+    <script src="app.js?v=1" defer></script>
+</head>
+<body>
+
+    <!-- Suite Navigation -->
+    <nav class="suite-nav" aria-label="Suite navigation">
+        <a href="https://nc.arose-niazi.me/">← NC Suite</a>
+    </nav>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <h1 class="site-title">Subnet<span>Calculator</span></h1>
+            <div class="header-actions">
+                <button id="history-toggle-btn" type="button" aria-label="Toggle history panel">History</button>
+                <button id="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="primary-area">
+
+            <!-- Input Card -->
+            <section class="card" aria-label="Subnet input">
+                <h2 class="card-title">Subnet Input</h2>
+
+                <!-- Controls -->
+                <div class="controls-row">
+                    <div class="control-group">
+                        <label for="mode-select">Mode</label>
+                        <select id="mode-select">
+                            <option value="vlsm">VLSM</option>
+                            <option value="flsm">FLSM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- IP Address -->
+                <div class="input-section">
+                    <h3>IP Address / CIDR</h3>
+                    <div class="ip-input-row">
+                        <input type="text" id="ip-input" class="text-input ip-field" placeholder="192.168.1.0" aria-label="IP Address" autocomplete="off">
+                        <span class="ip-slash">/</span>
+                        <input type="number" id="cidr-input" class="text-input cidr-field" placeholder="24" min="1" max="30" aria-label="CIDR prefix length">
+                    </div>
+                    <p class="input-hint" id="ip-hint"></p>
+                </div>
+
+                <!-- VLSM Hosts -->
+                <div class="input-section" id="vlsm-section">
+                    <h3>Host Requirements <span class="label-hint">(comma separated)</span></h3>
+                    <input type="text" id="hosts-input" class="text-input full-width" placeholder="50, 30, 20, 10" aria-label="Host requirements, comma separated">
+                    <p class="input-hint">Enter the number of hosts needed for each subnet, separated by commas.</p>
+                </div>
+
+                <!-- FLSM Subnets -->
+                <div class="input-section" id="flsm-section" style="display:none;">
+                    <h3>Number of Subnets</h3>
+                    <input type="number" id="subnets-input" class="text-input" placeholder="4" min="1" max="1024" aria-label="Number of subnets">
+                    <p class="input-hint">Enter how many equal-sized subnets you need.</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="btn-row">
+                    <button id="calculate-btn" class="btn btn-primary" type="button">Calculate</button>
+                    <button id="example-btn" class="btn btn-secondary" type="button">Example</button>
+                    <button id="clear-btn" class="btn btn-secondary" type="button">Clear</button>
+                </div>
+
+                <p class="keyboard-hint">
+                    Tip: Press <kbd>Ctrl+Enter</kbd> to calculate
+                </p>
+            </section>
+
+            <!-- Output -->
+            <section id="output" aria-label="Calculation results"></section>
+        </div>
+
+        <!-- History Panel -->
+        <aside id="history-panel">
+            <div class="card">
+                <h2 class="card-title">
+                    History
+                    <button id="clear-history-btn" class="btn btn-small btn-secondary" type="button">Clear</button>
+                </h2>
+                <div id="history-list"></div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span>&copy; 2022&ndash;2026 Arose Niazi</span>
+            <nav class="footer-links" aria-label="Footer links">
+                <a href="https://nc.arose-niazi.me/">NC Suite</a>
+                <a href="https://github.com/Arose-Niazi/dccn-subnetter" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://arose-niazi.me" target="_blank" rel="noopener noreferrer">Author</a>
+            </nav>
+        </div>
+    </footer>
+
+</body>
+</html>

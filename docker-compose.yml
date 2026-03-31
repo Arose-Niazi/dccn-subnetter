@@ -1,0 +1,15 @@
+name: dccn-subnetter
+
+services:
+  web:
+    build: .
+    container_name: dccn-subnetter-web
+    restart: unless-stopped
+    networks:
+      - proxy
+    expose:
+      - "80"
+
+networks:
+  proxy:
+    external: true

@@ -1,0 +1,16 @@
+{
+    "name": "IPv4 Subnet Calculator",
+    "short_name": "Subnetter",
+    "description": "VLSM and FLSM subnet calculator with step-by-step solutions and visual subnet maps",
+    "start_url": "/subnetter/",
+    "display": "standalone",
+    "background_color": "#f8fafc",
+    "theme_color": "#6366f1",
+    "icons": [
+        {
+            "src": "favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ]
+}
